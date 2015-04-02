@@ -1,0 +1,12 @@
+name: control_room
+description: DSA Control Room
+version: 1.0.0
+dependencies:
+  polymer: ">=0.16.0+1 <0.17.0"
+  core_elements: ">=0.6.1+1 <0.7.0"
+  paper_elements: ">=0.6.2+1 <0.7.0"
+  dslink:
+    git: https://github.com/IOT-DSA/sdk-dslink-dart.git
+transformers:
+- polymer:
+    entry_points: web/index.html

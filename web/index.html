@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Control Room</title>
+        <link rel="import" href="packages/core_elements/core_animated_pages.html">
+        <link rel="import" href="packages/core_elements/core_pages.html">
+        <link rel="import" href="packages/paper_elements/paper_tabs.html">
+        <link rel="import" href="packages/core_elements/core_header_panel.html">
+        <link rel="import" href="packages/polymer/polymer.html">
+        <link rel="import" href="lib/dsa_links.html">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body unresolved fullbleed vertical layout>
+        <paper-tabs block selected="0" id="tabs">
+            <paper-tab>Links</paper-tab>
+        </paper-tabs>
+
+        <core-pages fit center-justified justified vertical layout selected="{{selected}}" id="pages">
+            <div><dsa-links></dsa-links></div>
+        </core-pages>
+
+        <script type="application/dart" src="index.dart"></script>
+        <script src="packages/browser/dart.js"></script>
+    </body>
+</html>

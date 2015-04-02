@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+}
+
+body.core-narrow {
+  padding: 8px;
+}
+
+paper-tabs, core-toolbar {
+  background-color: #00bcd4;
+  color: #fff;
+  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.2);
+}
+
+core-toolbar paper-tabs {
+  box-shadow: none;
+}
+
+core-list {
+  display: block;
+  height: 100%;
+  margin: 0 auto;
+}
+
+core-pages {
+  margin-top: 45px;
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<link rel="import" href="packages/core_elements/core_list_dart.html">
+
+<polymer-element name="dsa-links">
+  <template>
+    <core-list-dart vertical layout fit data="{{links}}">
+      <template>
+        <div style="height: 40px; border-bottom: 1px solid black;">
+          <template if="{{model.hasIcon}}">
+            <img _src="{{model.icon}}" width="64" height="64">
+          </template>
+
+          <h3>{{model.name}}</h3>
+        </div>
+      </template>
+    </core-list-dart>
+  </template>
+
+  <script type="application/dart" src="dsa_links.dart"></script>
+</polymer-element>
