@@ -16,12 +16,10 @@ core-toolbar paper-tabs {
   box-shadow: none;
 }
 
-core-list {
-  display: block;
-  height: 100%;
-  margin: 0 auto;
-}
-
 core-pages {
   margin-top: 45px;
+}
+
+#nodes {
+  visibility: visible;
 }

@@ -1,0 +1,22 @@
+<link rel="import" href="../../packages/paper_elements/paper_shadow.html">
+
+<polymer-element name="material-card" attributes="autoraise">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 20px;
+      }
+
+    </style>
+
+    <paper-shadow id="shadow" animated="true">
+      <paper-ripple></paper-ripple>
+      <div class="content">
+        <content></content>
+      </div>
+    </paper-shadow>
+  </template>
+
+  <script src="material_card.dart" type="application/dart"></script>
+</polymer-element>

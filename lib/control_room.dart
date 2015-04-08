@@ -1,7 +1,6 @@
 import "dart:async";
 import "dart:html";
 
-import "package:polymer/polymer.dart";
 
 import "package:dslink/browser_client.dart";
 import "package:dslink/requester.dart";
@@ -32,11 +31,17 @@ initControlRoom() async {
   await link.onRequesterReady;
   requester = link.requester;
 
-  await initPolymer();
-
   var tabs = querySelector("#tabs");
   var pages = querySelector("#pages");
   tabs.on["core-select"].listen((e) {
     pages.attributes["selected"] = tabs.attributes["selected"];
   });
+
+  for (var h in onReadyHandlers) {
+    h();
+  }
+
+  onReadyHandlers.clear();
 }
+
+List<Function> onReadyHandlers = [];

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<link rel="import" href="packages/core_elements/core_list_dart.html">
+<link rel="import" href="material_card.html">
+<link rel="import" href="packages/paper_elements/paper_button.html">
+
+<polymer-element name="dsa-nodes" attributes="path">
+  <template>
+    <style>
+      :host {
+        width: 256px;
+        height: 256px;
+        visibility: visible;
+      }
+
+      material-card {
+        width: 250px;
+      }
+
+      material-card::shadow .content {
+        background-color: #03A9F4;
+        color: #FFF;
+        padding: 10px;
+      }
+
+      core-list {
+        display: block;
+        height: 100%;
+        margin: 0 auto;
+      }
+    </style>
+
+    <core-list-dart id="list" vertical layout fit data="{{nodez}}">
+      <template>
+        <material-card path="{{model.path}}">
+          <h2>{{model.name}}</h2>
+
+          <template if="{{model.hasValue}}">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h3>Value: {{model.value}}</h3>
+          </template>
+
+          <div horizontal end-justified layout>
+            <paper-button class="node-open" id="node-button" on-click="{{onNodeClicked}}">Open</paper-button>
+          </div>
+        </material-card>
+      </template>
+    </core-list-dart>
+  </template>
+
+  <script type="application/dart" src="dsa_nodes.dart"></script>
+</polymer-element>
