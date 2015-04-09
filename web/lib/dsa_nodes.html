@@ -2,6 +2,7 @@
 <link rel="import" href="packages/core_elements/core_list_dart.html">
 <link rel="import" href="material_card.html">
 <link rel="import" href="packages/paper_elements/paper_button.html">
+<link rel="import" href="packages/paper_elements/paper_dialog.html">
 
 <polymer-element name="dsa-nodes" attributes="path">
   <template>
@@ -27,21 +28,48 @@
         height: 100%;
         margin: 0 auto;
       }
+
+      paper-button {
+        z-index: 2 !important;
+      }
     </style>
 
     <core-list-dart id="list" vertical layout fit data="{{nodez}}">
       <template>
-        <material-card path="{{model.path}}">
+        <material-card autoraise path="{{model.path}}">
           <h2>{{model.name}}</h2>
+
+          <div horizontal end-justified layout>
+            <template if="{{model.hasChildren}}">
+              <paper-button class="node-open" id="node-button" on-click="{{onNodeClicked}}">View Children</paper-button>
+              <paper-button class="node-view" id="node-view" on-click="{{onViewNodeClicked}}">View Node</paper-button>
+            </template>
+          </div>
+
+          <paper-dialog transition="paper-dialog-transition-center" backdrop="true" id="dialog" heading="View Node" autofocus>
+            <div>
+              <h4>Configurations</h4>
+
+              <template repeat="{{key in model.configs.keys}}">
+                <h5>{{key}}: {{model.configs[key]}}</h5>
+              </template>
+            </div>
+
+            <div>
+              <h4>Attributes</h4>
+
+              <template repeat="{{key in model.attributes.keys}}">
+                <h5>{{key}}: {{model.attributes[key]}}</h5>
+              </template>
+            </div>
+
+            <paper-button id="close-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
+          </paper-dialog>
 
           <template if="{{model.hasValue}}">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <h3>Value: {{model.value}}</h3>
           </template>
-
-          <div horizontal end-justified layout>
-            <paper-button class="node-open" id="node-button" on-click="{{onNodeClicked}}">Open</paper-button>
-          </div>
         </material-card>
       </template>
     </core-list-dart>

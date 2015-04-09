@@ -7,7 +7,7 @@ class MaterialCard extends PolymerElement {
 
   int z_mouseout = 1;
   int z_mouseover = 5;
-  @published bool autoraise = false;
+  @published bool autoraise;
 
   @override
   attached() {

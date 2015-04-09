@@ -6,8 +6,7 @@ import "package:dslink/browser_client.dart";
 import "package:dslink/requester.dart";
 import "package:dslink/src/crypto/pk.dart";
 
-import "package:paper_elements/paper_tabs.dart";
-import "package:core_elements/core_pages.dart";
+import "package:paper_elements/paper_icon_button.dart";
 
 export "package:polymer/polymer.dart";
 export "package:dslink/requester.dart";
@@ -31,10 +30,12 @@ initControlRoom() async {
   await link.onRequesterReady;
   requester = link.requester;
 
-  var tabs = querySelector("#tabs");
-  var pages = querySelector("#pages");
-  tabs.on["core-select"].listen((e) {
-    pages.attributes["selected"] = tabs.attributes["selected"];
+  var arrow = querySelector("#arrow") as PaperIconButton;
+
+  arrow.onClick.listen((_) {
+    if (goBack != null) {
+      goBack();
+    }
   });
 
   for (var h in onReadyHandlers) {
@@ -43,5 +44,7 @@ initControlRoom() async {
 
   onReadyHandlers.clear();
 }
+
+Function goBack;
 
 List<Function> onReadyHandlers = [];
