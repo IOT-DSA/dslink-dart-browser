@@ -1,3 +1,9 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,500,700);
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 core-header-panel {
   height: 100%;
 }

@@ -5,6 +5,7 @@
 library control_room.dsa_nodes;
 
 import "dart:async";
+import "dart:convert";
 
 import "package:control_room/control_room.dart";
 import "package:dslink/requester.dart";
@@ -59,7 +60,7 @@ class DSNodesElement extends PolymerElement with Observable {
 
       var s = path.split("/");
       var p =  s.take(s.length - 1).join("/");
-      if (p[0] != "/") {
+      if (!p.startsWith("/")) {
         p = "/${p}";
       }
       path = p;
@@ -68,7 +69,7 @@ class DSNodesElement extends PolymerElement with Observable {
     _listUpdate = requester.list(path);
     _listSub = _listUpdate.listen((e) async {
       if (e.streamStatus == StreamStatus.initialize) {
-        return;
+        return null;
       }
 
       var node = e.node;
@@ -90,7 +91,7 @@ class DSNodesElement extends PolymerElement with Observable {
         var full = await getDSNode(child, child.remotePath);
 
         if (node.remotePath != path) { // It timed out.
-          return;
+          return null;
         }
 
         print("Loading Node: ${child.remotePath}");
@@ -98,7 +99,7 @@ class DSNodesElement extends PolymerElement with Observable {
         var m = new NodeModel(child);
         nodez.add(m);
         nmap[child.remotePath] = m;
-        if (m.configs.containsKey(r"type")) {
+        if (m.node.getConfig(r"$type") != null) {
           print("Subscribing to ${child.remotePath}");
           listeners[child.remotePath] = requester.subscribe(child.remotePath, (ValueUpdate update) {
             m.value = update.value;
@@ -109,7 +110,7 @@ class DSNodesElement extends PolymerElement with Observable {
   }
 
   Future<RemoteNode> getDSNode(RemoteNode xnode, String path) async {
-    RemoteNode n = await requester.list(path).where((it) => it.streamStatus != StreamStatus.initialize).first.timeout(new Duration(seconds: 3), onTimeout: () {
+    RemoteNode n = await requester.list(path).where((it) => it.streamStatus != StreamStatus.initialize).map((it) => it.node).first.timeout(new Duration(seconds: 3), onTimeout: () {
       return xnode;
     });
     return n;
@@ -129,8 +130,24 @@ class DSNodesElement extends PolymerElement with Observable {
     dialog.open();
   }
 
+  onClicked(Event event, var detail, var target) {
+    var x = (event.target as HtmlElement).parent.parent;
+    var p = x.attributes["path"];
+
+    var dialog = x.querySelector("#dialog") as PaperDialog;
+    dialog.open();
+  }
+
+  onWatchValueClicked(Event event, var detail, var target) {
+    var x = (event.target as HtmlElement).parent.parent;
+    var p = x.attributes["path"];
+
+    var dialog = x.querySelector("#watch-dialog") as PaperDialog;
+    dialog.open();
+  }
+
   closeDialog(Event event, var detail, var target) {
-    var x = (event.target as HtmlElement).parent as PaperDialog;
+    var x = (event.target as HtmlElement).parent.parent as PaperDialog;
     x.toggle();
   }
 
@@ -138,7 +155,7 @@ class DSNodesElement extends PolymerElement with Observable {
   StreamController<String> _pathController = new StreamController<String>();
 }
 
-class NodeModel {
+class NodeModel extends Observable {
   final RemoteNode node;
 
   NodeModel(this.node);
@@ -148,8 +165,20 @@ class NodeModel {
   String get name => node.name;
   String get path => node.remotePath;
   bool get hasValue => node.getConfig(r"$type") != null;
+  String get type => node.getConfig(r"$type");
   bool get hasChildren => node.children.isNotEmpty;
-  dynamic value;
+  @observable dynamic value;
   Map<String, dynamic> get attributes => node.attributes;
   Map<String, dynamic> get configs => node.configs;
+  bool get isInvokable => node.getConfig(r"$invokable") != null;
+
+  valueAsString(value) {
+    if (value is Map || value is List) {
+      return _jsonEncoder.convert(value);
+    } else {
+      return value == null ? "null" : value.toString();
+    }
+  }
 }
+
+JsonEncoder _jsonEncoder = new JsonEncoder.withIndent("  ");

@@ -39,37 +39,66 @@
         <material-card autoraise path="{{model.path}}">
           <h2>{{model.name}}</h2>
 
+          <p>
+            <template if="{{model.isInvokable}}">
+              Invokable<br/>
+            </template>
+
+            <template if="{{model.hasValue}}">
+              Type: {{model.type}}<br/>
+              Value: {{model.valueAsString(model.value)}}<br/>
+            </template>
+          </p>
+
           <div horizontal end-justified layout>
             <template if="{{model.hasChildren}}">
               <paper-button class="node-open" id="node-button" on-click="{{onNodeClicked}}">View Children</paper-button>
-              <paper-button class="node-view" id="node-view" on-click="{{onViewNodeClicked}}">View Node</paper-button>
             </template>
+
+            <template if="{{model.hasValue}}">
+              <paper-button class="node-open" id="watch-value" on-click="{{onWatchValueClicked}}">Watch Value</paper-button>
+            </template>
+
+            <paper-button class="node-view" id="node-view" on-click="{{onViewNodeClicked}}">View Node</paper-button>
           </div>
 
-          <paper-dialog transition="paper-dialog-transition-center" backdrop="true" id="dialog" heading="View Node" autofocus>
-            <div>
-              <h4>Configurations</h4>
-
-              <template repeat="{{key in model.configs.keys}}">
-                <h5>{{key}}: {{model.configs[key]}}</h5>
-              </template>
+          <paper-dialog id="watch-dialog" heading="{{model.path}}" autofocus>
+            <div horizontal center-justified layout>
+              <p style="font-size: 70px; font-weight: bold;">{{model.valueAsString(model.value)}}</p>
             </div>
 
-            <div>
-              <h4>Attributes</h4>
-
-              <template repeat="{{key in model.attributes.keys}}">
-                <h5>{{key}}: {{model.attributes[key]}}</h5>
-              </template>
+            <div horizontal end-justified layout>
+              <paper-button id="close-watch-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
             </div>
-
-            <paper-button id="close-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
           </paper-dialog>
 
-          <template if="{{model.hasValue}}">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <h3>Value: {{model.value}}</h3>
-          </template>
+          <paper-dialog transition="paper-dialog-transition-center" backdrop="true" id="dialog" heading="{{model.path}}" autofocus>
+            <div style="width: 600px;">
+              <h4>Configurations</h4>
+
+              <p>
+                <template repeat="{{key in model.configs.keys}}">
+                  {{key}}: {{model.configs[key]}}<br/>
+                </template>
+              </p>
+            </div>
+
+            <template if="{{model.attributes.isNotEmpty}}">
+              <div style="width: 600px;">
+                <h4>Attributes</h4>
+
+                <p>
+                  <template repeat="{{key in model.attributes.keys}}">
+                    {{key}}: {{model.attributes[key]}}<br/>
+                  </template>
+                </p>
+              </div>
+            </template>
+
+            <div horizontal end-justified layout>
+              <paper-button id="close-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
+            </div>
+          </paper-dialog>
         </material-card>
       </template>
     </core-list-dart>
