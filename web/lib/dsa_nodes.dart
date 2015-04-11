@@ -2,6 +2,7 @@
 @HtmlImport("material_card.html")
 @HtmlImport("package:paper_elements/paper_button.html")
 @HtmlImport("package:paper_elements/paper_dialog.html")
+@HtmlImport("package:paper_elements/paper_input.html")
 library control_room.dsa_nodes;
 
 import "dart:async";
@@ -10,6 +11,7 @@ import "dart:convert";
 import "package:control_room/control_room.dart";
 import "package:dslink/requester.dart";
 import "package:paper_elements/paper_dialog.dart";
+import "package:paper_elements/paper_input.dart";
 import "dart:html";
 
 @CustomTag("dsa-nodes")
@@ -138,6 +140,35 @@ class DSNodesElement extends PolymerElement with Observable {
     dialog.open();
   }
 
+  onInvokeClicked(Event event, var detail, var target) {
+    var x = (event.target as HtmlElement).parent.parent;
+    var p = x.attributes["path"];
+    var dialog = x.querySelector("#invoke-dialog") as PaperDialog;
+    dialog.open();
+  }
+
+  invokeAction(Event event, var detail, var target) async {
+    var dialog = (event.target as HtmlElement).parent.parent as PaperDialog;
+    var map = {};
+    var parames = dialog.querySelectorAll(".action-param");
+
+    for (var x in parames) {
+      var key = x.attributes["data-key"];
+      if (x is PaperInput) {
+        map[key] = x.value;
+      }
+    }
+
+    var stream = requester.invoke(dialog.attributes["data-path"], map);
+    var update = await stream.first;
+    var value = update.updates.first["value"];
+    var str = nmap[dialog.attributes["data-path"]].valueAsString(value);
+    var a = dialog.parent.querySelector("#invoke-value-dialog");
+    a.querySelector("#value").text = str;
+    print("Invoke Result: ${value}");
+    a.open();
+  }
+
   onWatchValueClicked(Event event, var detail, var target) {
     var x = (event.target as HtmlElement).parent.parent;
     var p = x.attributes["path"];
@@ -153,6 +184,18 @@ class DSNodesElement extends PolymerElement with Observable {
 
   Stream<String> get pathStream => _pathController.stream;
   StreamController<String> _pathController = new StreamController<String>();
+}
+
+class ActionParameter {
+  String name;
+  Object defaultValue;
+  String type;
+
+  ActionParameter(Map map) {
+    name = map["name"];
+    defaultValue = map["default"];
+    type = map["type"];
+  }
 }
 
 class NodeModel extends Observable {
@@ -171,6 +214,24 @@ class NodeModel extends Observable {
   Map<String, dynamic> get attributes => node.attributes;
   Map<String, dynamic> get configs => node.configs;
   bool get isInvokable => node.getConfig(r"$invokable") != null;
+
+  List<ActionParameter> _params;
+
+  List<ActionParameter> get params {
+    if (_params != null) return _params;
+
+    _params = [];
+
+    if (node.getConfig(r"$params") == null) {
+      return _params;
+    }
+
+    for (var o in node.getConfig(r"$params")) {
+      _params.add(new ActionParameter(o));
+    }
+
+    return _params;
+  }
 
   valueAsString(value) {
     if (value is Map || value is List) {
