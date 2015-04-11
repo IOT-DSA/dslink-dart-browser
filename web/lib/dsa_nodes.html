@@ -63,7 +63,7 @@
             <template if="{{model.isInvokable}}">
               <paper-button class="node-invoke" id="invoke-btn" on-click="{{onInvokeClicked}}">Invoke</paper-button>
             </template>
-            
+
             <paper-button class="node-view" id="node-view" on-click="{{onViewNodeClicked}}">View Node</paper-button>
           </div>
 
@@ -80,7 +80,7 @@
           <paper-dialog id="invoke-dialog" data-path="{{model.path}}" heading="Invoke {{model.path}}" autofocus>
             <template if="{{model.isInvokable}}">
             <template repeat="{{param in model.params}}">
-              <paper-input class="action-param" data-key="{{param.name}}" label="{{param.defaultValue}}"></paper-input>
+              <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
             </template>
             </template>
 
@@ -88,12 +88,16 @@
               <paper-button id="invoke-action" on-click="{{invokeAction}}">Invoke</paper-button>
               <paper-button id="close-invoke-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
             </div>
-          </paper-dialog>
 
-          <paper-dialog id="invoke-value-dialog" data-path="{{model.path}}" heading="Invoke Result">
-            <div horizontal center-justified layout>
-              <p id="value" style="font-size: 70px; font-weight: bold;"></p>
-            </div>
+            <paper-dialog id="invoke-value-dialog" data-path="{{model.path}}" heading="Invoke Result">
+              <div horizontal center-justified layout>
+                <p id="value" style="font-size: 70px; font-weight: bold;"></p>
+              </div>
+
+              <div horizontal end-justified layout>
+                <paper-button id="close-invoke-value-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
+              </div>
+            </paper-dialog>
           </paper-dialog>
 
           <paper-dialog transition="paper-dialog-transition-center" backdrop="true" id="dialog" heading="{{model.path}}" autofocus>

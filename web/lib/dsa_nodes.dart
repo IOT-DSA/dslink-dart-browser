@@ -90,11 +90,11 @@ class DSNodesElement extends PolymerElement with Observable {
           }
         }
 
-        var full = await getDSNode(child, child.remotePath);
-
         if (node.remotePath != path) { // It timed out.
           return null;
         }
+
+        var full = await getDSNode(child, child.remotePath);
 
         print("Loading Node: ${child.remotePath}");
 
@@ -163,7 +163,7 @@ class DSNodesElement extends PolymerElement with Observable {
     var update = await stream.first;
     var value = update.updates.first["value"];
     var str = nmap[dialog.attributes["data-path"]].valueAsString(value);
-    var a = dialog.parent.querySelector("#invoke-value-dialog");
+    var a = dialog.querySelector("#invoke-value-dialog");
     a.querySelector("#value").text = str;
     print("Invoke Result: ${value}");
     a.open();
@@ -196,6 +196,8 @@ class ActionParameter {
     defaultValue = map["default"];
     type = map["type"];
   }
+
+  String get label => "${name}${defaultValue != null ? ' (${defaultValue})' : ''}";
 }
 
 class NodeModel extends Observable {

@@ -1,7 +1,6 @@
 import "dart:async";
 import "dart:html";
 
-
 import "package:dslink/browser_client.dart";
 import "package:dslink/requester.dart";
 import "package:dslink/src/crypto/pk.dart";
@@ -25,7 +24,7 @@ initControlRoom() async {
     window.localStorage["dsa_key"] = key.saveToString();
   }
 
-  link = new BrowserECDHLink("http://titan.directcode.org:8025/conn", "Control-Room-", key, isResponder: false);
+  link = new BrowserECDHLink("http://127.0.0.1:8080/conn", "Control-Room-", key, isResponder: false);
   link.connect();
   await link.onRequesterReady;
   requester = link.requester;
