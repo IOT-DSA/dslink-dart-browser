@@ -12,6 +12,8 @@ import "package:control_room/control_room.dart";
 import "package:dslink/requester.dart";
 import "package:paper_elements/paper_dialog.dart";
 import "package:paper_elements/paper_input.dart";
+import "package:core_elements/core_menu.dart";
+import "package:paper_elements/paper_item.dart";
 import "dart:html";
 
 @CustomTag("dsa-nodes")
@@ -156,16 +158,19 @@ class DSNodesElement extends PolymerElement with Observable {
       var key = x.attributes["data-key"];
       if (x is PaperInput) {
         map[key] = x.value;
+      } else if (x is CoreMenu) {
+        map[key] = ((x as CoreMenu).selectedItem as PaperItem).text.trim().toLowerCase() == "true";
       }
     }
 
     var stream = requester.invoke(dialog.attributes["data-path"], map);
     var update = await stream.first;
-    var value = update.updates.first["value"];
-    var str = nmap[dialog.attributes["data-path"]].valueAsString(value);
+    var result = update.updates.first;
+    if (result is Map && result.keys.length == 1) {
+      result = result[result.keys.first];
+    }
     var a = dialog.querySelector("#invoke-value-dialog");
-    a.querySelector("#value").text = str;
-    print("Invoke Result: ${value}");
+    a.querySelector("#value").text = valueAsString(result);
     a.open();
   }
 
@@ -196,6 +201,9 @@ class ActionParameter {
     defaultValue = map["default"];
     type = map["type"];
   }
+
+  bool get isString => !isBoolean;
+  bool get isBoolean => type.toLowerCase().contains("bool");
 
   String get label => "${name}${defaultValue != null ? ' (${defaultValue})' : ''}";
 }
@@ -245,3 +253,11 @@ class NodeModel extends Observable {
 }
 
 JsonEncoder _jsonEncoder = new JsonEncoder.withIndent("  ");
+
+valueAsString(value) {
+  if (value is Map || value is List) {
+    return _jsonEncoder.convert(value);
+  } else {
+    return value == null ? "null" : value.toString();
+  }
+}

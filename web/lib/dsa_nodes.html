@@ -4,6 +4,9 @@
 <link rel="import" href="packages/paper_elements/paper_button.html">
 <link rel="import" href="packages/paper_elements/paper_dialog.html">
 <link rel="import" href="packages/paper_elements/paper_input.html">
+<link rel="import" href="packages/paper_elements/paper_dropdown.html">
+<link rel="import" href="packages/paper_elements/paper_dropdown_menu.html">
+<link rel="import" href="packages/paper_elements/paper_item.html">
 
 <polymer-element name="dsa-nodes" attributes="path">
   <template>
@@ -32,6 +35,22 @@
 
       paper-button {
         z-index: 2 !important;
+      }
+
+      html /deep/ paper-item {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      html /deep/ paper-dropdown-menu {
+        box-sizing: border-box;
+        width: 170px;
+      }
+
+      html /deep/ core-menu {
+        box-sizing: border-box;
+        width: 170px;
       }
     </style>
 
@@ -80,7 +99,20 @@
           <paper-dialog id="invoke-dialog" data-path="{{model.path}}" heading="Invoke {{model.path}}" autofocus>
             <template if="{{model.isInvokable}}">
             <template repeat="{{param in model.params}}">
-              <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
+              <template if="{{param.isString}}">
+                <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
+              </template>
+
+              <template if="{{param.isBoolean}}">
+                <paper-dropdown-menu label="{{param.label}}">
+                  <paper-dropdown>
+                    <core-menu data-key="{{param.name}}" class="action-param">
+                      <paper-item>true</paper-item>
+                      <paper-item>false</paper-item>
+                    </core-menu>
+                  </paper-dropdown>
+                </paper-dropdown-menu>
+              </template>
             </template>
             </template>
 
