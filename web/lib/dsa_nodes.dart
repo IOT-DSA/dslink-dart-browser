@@ -13,6 +13,7 @@ import "package:dslink/requester.dart";
 import "package:paper_elements/paper_dialog.dart";
 import "package:paper_elements/paper_input.dart";
 import "package:core_elements/core_menu.dart";
+import "package:core_elements/core_list_dart.dart";
 import "package:paper_elements/paper_item.dart";
 import "dart:html";
 
@@ -31,6 +32,9 @@ class DSNodesElement extends PolymerElement with Observable {
   @override
   void attached() {
     super.attached();
+
+    list = $["node-list"];
+
     print("DSA Nodes Element Attached");
 
     onReadyHandlers.add(() {
@@ -49,6 +53,8 @@ class DSNodesElement extends PolymerElement with Observable {
   Stream<RequesterListUpdate> _listUpdate;
   Stream<ValueUpdate> _valueUpdates;
   StreamSubscription<RequesterListUpdate> _listSub;
+
+  CoreList list;
 
   loadNodes() async {
     nodez.clear();
@@ -78,8 +84,10 @@ class DSNodesElement extends PolymerElement with Observable {
 
       var node = e.node;
 
+      var futures = [];
+
       for (RemoteNode child in node.children.values) {
-        new Future(() async {
+        futures.add(new Future(() async {
           var existing = nodez.where((it) => it.node.remotePath == child.remotePath);
 
           if (existing.isNotEmpty) {
@@ -108,6 +116,14 @@ class DSNodesElement extends PolymerElement with Observable {
             m.hasChildren = true;
           }
 
+          if (full.getConfig(r"$invokable") != null) {
+            m.isInvokable = true;
+          }
+
+          if (full.getConfig(r"$type") != null) {
+            m.hasValue = true;
+          }
+
           print("Loading Node: ${child.remotePath}");
 
           if (m.node.getConfig(r"$type") != null) {
@@ -117,8 +133,15 @@ class DSNodesElement extends PolymerElement with Observable {
             });
           }
           m.ready = true;
-        });
+        }));
       }
+
+      Future.wait(futures).then((_) {
+        if (node.remotePath != path) {
+          return;
+        }
+        list.refresh();
+      });
     });
   }
 
@@ -231,14 +254,16 @@ class NodeModel extends Observable {
   String get icon => node.getAttribute("icon");
   String get name => node.name;
   String get path => node.remotePath;
-  bool get hasValue => node.getConfig(r"$type") != null;
+  @observable
+  bool hasValue = false;
   String get type => node.getConfig(r"$type");
   @observable
   bool hasChildren = false;
   @observable dynamic value;
   Map<String, dynamic> get attributes => node.attributes;
   Map<String, dynamic> get configs => node.configs;
-  bool get isInvokable => node.getConfig(r"$invokable") != null;
+  @observable
+  bool isInvokable = false;
   @observable
   bool ready = false;
 
