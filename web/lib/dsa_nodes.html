@@ -99,11 +99,12 @@
           <paper-dialog id="invoke-dialog" data-path="{{model.path}}" heading="Invoke {{model.path}}" autofocus>
             <template if="{{model.isInvokable}}">
             <template repeat="{{param in model.params}}">
-              <template if="{{param.isString}}">
+              <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
+              <!--<template if="{{param.isString}}">
                 <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
-              </template>
+              </template>-->
 
-              <template if="{{param.isBoolean}}">
+<!--              <template if="{{param.isBoolean}}">
                 <paper-dropdown-menu label="{{param.label}}">
                   <paper-dropdown>
                     <core-menu data-key="{{param.name}}" class="action-param">
@@ -112,7 +113,7 @@
                     </core-menu>
                   </paper-dropdown>
                 </paper-dropdown-menu>
-              </template>
+              </template>-->
             </template>
             </template>
 
