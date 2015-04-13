@@ -79,36 +79,38 @@ class DSNodesElement extends PolymerElement with Observable {
       var node = e.node;
 
       for (RemoteNode child in node.children.values) {
-        var existing = nodez.where((it) => it.node.remotePath == child.remotePath);
+        new Future(() async {
+          var existing = nodez.where((it) => it.node.remotePath == child.remotePath);
 
-        if (existing.isNotEmpty) {
-          for (var x in existing.toList()) {
-            if (listeners.containsKey(x.path)) {
-              var listener = listeners.remove(x.path);
-              listener.cancel();
+          if (existing.isNotEmpty) {
+            for (var x in existing.toList()) {
+              if (listeners.containsKey(x.path)) {
+                var listener = listeners.remove(x.path);
+                listener.cancel();
+              }
+              nodez.remove(x);
+              nmap.remove(x.path);
             }
-            nodez.remove(x);
-            nmap.remove(x.path);
           }
-        }
 
-        if (node.remotePath != path) { // It timed out.
-          return null;
-        }
+          if (node.remotePath != path) { // It timed out.
+            return null;
+          }
 
-        var full = await getDSNode(child, child.remotePath);
+          var full = await getDSNode(child, child.remotePath);
 
-        print("Loading Node: ${child.remotePath}");
+          print("Loading Node: ${child.remotePath}");
 
-        var m = new NodeModel(child);
-        nodez.add(m);
-        nmap[child.remotePath] = m;
-        if (m.node.getConfig(r"$type") != null) {
-          print("Subscribing to ${child.remotePath}");
-          listeners[child.remotePath] = requester.subscribe(child.remotePath, (ValueUpdate update) {
-            m.value = update.value;
-          });
-        }
+          var m = new NodeModel(child);
+          nodez.add(m);
+          nmap[child.remotePath] = m;
+          if (m.node.getConfig(r"$type") != null) {
+            print("Subscribing to ${child.remotePath}");
+            listeners[child.remotePath] = requester.subscribe(child.remotePath, (ValueUpdate update) {
+              m.value = update.value;
+            });
+          }
+        });
       }
     });
   }
