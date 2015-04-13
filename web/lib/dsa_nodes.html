@@ -86,9 +86,9 @@
             <paper-button class="node-view" id="node-view" on-click="{{onViewNodeClicked}}">View Node</paper-button>
           </div>
 
-          <paper-dialog id="watch-dialog" heading="{{model.path}}" autofocus>
+          <paper-dialog id="watch-dialog" backdrop="true" heading="{{model.path}}" autofocus>
             <div horizontal center-justified layout>
-              <p style="font-size: 70px; font-weight: bold;">{{model.valueAsString(model.value)}}</p>
+              <p style="font-size: 40px; font-weight: bold;">{{model.valueAsString(model.value)}}</p>
             </div>
 
             <div horizontal end-justified layout>
@@ -96,7 +96,7 @@
             </div>
           </paper-dialog>
 
-          <paper-dialog id="invoke-dialog" data-path="{{model.path}}" heading="Invoke {{model.path}}" autofocus>
+          <paper-dialog id="invoke-dialog" backdrop="true" data-path="{{model.path}}" heading="Invoke {{model.path}}" autofocus>
             <template if="{{model.isInvokable}}">
             <template repeat="{{param in model.params}}">
               <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
@@ -122,9 +122,9 @@
               <paper-button id="close-invoke-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
             </div>
 
-            <paper-dialog id="invoke-value-dialog" data-path="{{model.path}}" heading="Invoke Result">
+            <paper-dialog id="invoke-value-dialog" backdrop="true" data-path="{{model.path}}" heading="Invoke Result">
               <div horizontal center-justified layout>
-                <p id="value" style="font-size: 70px; font-weight: bold;"></p>
+                <p id="value" style="font-size: 40px; font-weight: bold;"></p>
               </div>
 
               <div horizontal end-justified layout>

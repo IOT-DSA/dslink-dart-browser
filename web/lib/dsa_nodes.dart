@@ -97,26 +97,38 @@ class DSNodesElement extends PolymerElement with Observable {
             return null;
           }
 
-          var full = await getDSNode(child, child.remotePath);
+          var m = new NodeModel(child);
+
+          nodez.add(m);
+          nmap[child.remotePath] = m;
+
+          RemoteNode full = await getDSNode(child, child.remotePath);
+
+          if (full.children.isNotEmpty) {
+            m.hasChildren = true;
+          }
 
           print("Loading Node: ${child.remotePath}");
 
-          var m = new NodeModel(child);
-          nodez.add(m);
-          nmap[child.remotePath] = m;
           if (m.node.getConfig(r"$type") != null) {
             print("Subscribing to ${child.remotePath}");
             listeners[child.remotePath] = requester.subscribe(child.remotePath, (ValueUpdate update) {
               m.value = update.value;
             });
           }
+          m.ready = true;
         });
       }
     });
   }
 
   Future<RemoteNode> getDSNode(RemoteNode xnode, String path) async {
-    RemoteNode n = await requester.list(path).where((it) => it.streamStatus != StreamStatus.initialize).map((it) => it.node).first.timeout(new Duration(seconds: 3), onTimeout: () {
+    RemoteNode n = await requester
+      .list(path)
+      .where((it) => it.streamStatus != StreamStatus.initialize)
+      .map((it) => it.node)
+      .first
+      .timeout(new Duration(milliseconds: 1500), onTimeout: () {
       return xnode;
     });
     return n;
@@ -221,11 +233,14 @@ class NodeModel extends Observable {
   String get path => node.remotePath;
   bool get hasValue => node.getConfig(r"$type") != null;
   String get type => node.getConfig(r"$type");
-  bool get hasChildren => node.children.isNotEmpty;
+  @observable
+  bool hasChildren = false;
   @observable dynamic value;
   Map<String, dynamic> get attributes => node.attributes;
   Map<String, dynamic> get configs => node.configs;
   bool get isInvokable => node.getConfig(r"$invokable") != null;
+  @observable
+  bool ready = false;
 
   List<ActionParameter> _params;
 
