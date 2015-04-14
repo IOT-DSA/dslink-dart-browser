@@ -155,7 +155,6 @@ class DSNodesElement extends PolymerElement with Observable {
         if (node.remotePath != path) {
           return;
         }
-        list.refresh();
       });
     });
   }

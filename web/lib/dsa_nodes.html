@@ -25,6 +25,7 @@
         background-color: #03A9F4;
         color: #FFF;
         padding: 10px;
+        border-radius: 2px;
       }
 
       core-list {
@@ -82,7 +83,7 @@
       </div>
     </paper-dialog>
 
-    <core-list-dart id="node-list" vertical layout fit data="{{nodez}}">
+    <core-list-dart id="node-list" vertical layout fit data="{{nodez}}" runwayFactor="20">
       <template>
         <material-card autoraise path="{{model.path}}">
           <h2>{{model.name}}</h2>
