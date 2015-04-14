@@ -6,6 +6,7 @@
 library control_room.dsa_nodes;
 
 import "dart:async";
+import "dart:html";
 import "dart:convert";
 
 import "package:control_room/control_room.dart";
@@ -15,12 +16,12 @@ import "package:paper_elements/paper_input.dart";
 import "package:core_elements/core_menu.dart";
 import "package:core_elements/core_list_dart.dart";
 import "package:paper_elements/paper_item.dart";
-import "dart:html";
 
 @CustomTag("dsa-nodes")
 class DSNodesElement extends PolymerElement with Observable {
   @observable List<NodeModel> nodez = toObservable([]);
   @published @observable String path = "/";
+  @observable NodeModel topNode;
 
   Map<String, NodeModel> nmap = {};
   Map<String, ReqSubscribeListener> listeners = {};
@@ -62,6 +63,11 @@ class DSNodesElement extends PolymerElement with Observable {
       await _listSub.cancel();
     }
 
+    refreshAction = () {
+      print("Refresh");
+      loadNodes();
+    };
+
     goBack = () {
       print("Go Back");
       if (path == "/") {
@@ -76,13 +82,22 @@ class DSNodesElement extends PolymerElement with Observable {
       path = p;
     };
 
+    viewAction = () {
+      print("View Top Node");
+      PaperDialog dialog = $["view-top-node"];
+      dialog.open();
+    };
+
     _listUpdate = requester.list(path);
     _listSub = _listUpdate.listen((e) async {
+      print("List Update: ${e.node.remotePath}");
+
       if (e.streamStatus == StreamStatus.initialize) {
         return null;
       }
 
       var node = e.node;
+      topNode = new NodeModel(node);
 
       var futures = [];
 

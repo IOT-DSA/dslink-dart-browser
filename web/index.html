@@ -23,14 +23,14 @@
       height: 60px;
     }
 
+    core-toolbar {
+      background-color: #3f51b5;
+      color: white;
+    }
+
     .content {
       display: block;
       padding-top: 100px;
-    }
-
-    paper-icon-button {
-      height: 30px;
-      width: 30px;
     }
   </style>
 </head>
@@ -41,6 +41,10 @@
   <core-toolbar>
     <paper-icon-button icon="arrow-back" id="arrow"></paper-icon-button>
     <div flex id="path">/conns</div>
+    <div horizontal layout end-justified>
+      <paper-icon-button icon="refresh" title="refresh" id="refresh-btn"></paper-icon-button>
+      <paper-icon-button icon="info" title="view node" id="view-top-node-btn"></paper-icon-button>
+    </div>
   </core-toolbar>
   <div class="content">
     <dsa-nodes path="/conns"></dsa-nodes>

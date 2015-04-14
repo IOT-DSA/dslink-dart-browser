@@ -54,6 +54,34 @@
       }
     </style>
 
+    <paper-dialog id="view-top-node" autofocus backdrop heading="{{path}}">
+      <div style="width: 600px;">
+        <h4>Configurations</h4>
+
+        <p>
+          <template repeat="{{key in topNode.configs.keys}}">
+            {{key}}: {{topNode.configs[key]}}<br/>
+          </template>
+        </p>
+      </div>
+
+      <template if="{{topNode.attributes.isNotEmpty}}">
+        <div style="width: 600px;">
+          <h4>Attributes</h4>
+
+          <p>
+            <template repeat="{{key in model.attributes.keys}}">
+              {{key}}: {{topNode.attributes[key]}}<br/>
+            </template>
+          </p>
+        </div>
+      </template>
+
+      <div horizontal end-justified layout>
+        <paper-button id="close-top-node-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
+      </div>
+    </paper-dialog>
+
     <core-list-dart id="node-list" vertical layout fit data="{{nodez}}">
       <template>
         <material-card autoraise path="{{model.path}}">

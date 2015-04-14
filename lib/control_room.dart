@@ -24,16 +24,30 @@ initControlRoom() async {
     window.localStorage["dsa_key"] = key.saveToString();
   }
 
-  link = new BrowserECDHLink("http://127.0.0.1:8080/conn", "Control-Room-", key, isResponder: false);
+  link = new BrowserECDHLink("http://162.216.222.179:8080/conn", "Control-Room-", key, isResponder: false);
   link.connect();
   await link.onRequesterReady;
   requester = link.requester;
 
   var arrow = querySelector("#arrow") as PaperIconButton;
+  var refresh = querySelector("#refresh-btn") as PaperIconButton;
+  var view = querySelector("#view-top-node-btn") as PaperIconButton;
 
   arrow.onClick.listen((_) {
     if (goBack != null) {
       goBack();
+    }
+  });
+
+  refresh.onClick.listen((_) {
+    if (refreshAction != null) {
+      refreshAction();
+    }
+  });
+
+  view.onClick.listen((_) {
+    if (viewAction != null) {
+      viewAction();
     }
   });
 
@@ -45,5 +59,7 @@ initControlRoom() async {
 }
 
 Function goBack;
+Function viewAction;
+Function refreshAction;
 
 List<Function> onReadyHandlers = [];
