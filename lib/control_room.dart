@@ -24,7 +24,7 @@ initControlRoom() async {
     window.localStorage["dsa_key"] = key.saveToString();
   }
 
-  link = new BrowserECDHLink("http://162.216.222.179:8080/conn", "Control-Room-", key, isResponder: false);
+  link = new BrowserECDHLink("http://titan.directcode.org:8025/conn", "Control-Room-", key, isResponder: false);
   link.connect();
   await link.onRequesterReady;
   requester = link.requester;
@@ -51,11 +51,27 @@ initControlRoom() async {
     }
   });
 
+  var hash = window.location.hash;
+  if (hash != null && hash.length > 1) {
+    var path = hash.substring(1);
+    var p = querySelector("dsa-nodes");
+    p.attributes["path"] = path;
+  }
+
   for (var h in onReadyHandlers) {
     h();
   }
 
   onReadyHandlers.clear();
+}
+
+void toggleSpinner([bool on]) {
+  var spinner = querySelector("#spinner");
+  if (on != null) {
+    spinner.active = on;
+  } else {
+    spinner.active = !spinner.active;
+  }
 }
 
 Function goBack;

@@ -10,6 +10,7 @@
   <link rel="import" href="packages/core_elements/core_header_panel.html">
   <link rel="import" href="packages/core_elements/core_drawer_panel.html">
   <link rel="import" href="packages/core_elements/core_toolbar.html">
+  <link rel="import" href="packages/paper_elements/paper_spinner.html">
   <link rel="import" href="lib/dsa_nodes.html">
   <link rel="stylesheet" href="style.css">
 
@@ -33,6 +34,16 @@
       display: block;
       padding-top: 100px;
     }
+
+    paper-spinner {
+      margin-top: 6px;
+      width: 25px;
+      height: 25px;
+    }
+
+    paper-spinner.red::shadow .circle {
+      border-color: #db4437;
+    }
   </style>
 </head>
 
@@ -43,6 +54,7 @@
     <paper-icon-button icon="arrow-back" id="arrow"></paper-icon-button>
     <div flex id="path">/conns</div>
     <div horizontal layout end-justified>
+      <paper-spinner class="red" id="spinner"></paper-spinner>
       <paper-icon-button icon="refresh" title="refresh" id="refresh-btn"></paper-icon-button>
       <paper-icon-button icon="info" title="view node" id="view-top-node-btn"></paper-icon-button>
     </div>

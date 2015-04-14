@@ -58,6 +58,7 @@ class DSNodesElement extends PolymerElement with Observable {
   CoreList list;
 
   loadNodes() async {
+    toggleSpinner(true);
     nodez.clear();
     if (_listSub != null) {
       await _listSub.cancel();
@@ -155,6 +156,7 @@ class DSNodesElement extends PolymerElement with Observable {
         if (node.remotePath != path) {
           return;
         }
+        toggleSpinner(false);
       });
     });
   }

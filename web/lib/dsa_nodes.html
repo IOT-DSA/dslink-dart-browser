@@ -7,6 +7,7 @@
 <link rel="import" href="packages/paper_elements/paper_dropdown.html">
 <link rel="import" href="packages/paper_elements/paper_dropdown_menu.html">
 <link rel="import" href="packages/paper_elements/paper_item.html">
+<link rel="import" href="packages/paper_elements/paper_spinner.html">
 
 <polymer-element name="dsa-nodes" attributes="path">
   <template>
@@ -83,21 +84,18 @@
       </div>
     </paper-dialog>
 
-    <core-list-dart id="node-list" vertical layout fit data="{{nodez}}" runwayFactor="20">
+    <core-list-dart id="node-list" vertical layout fit height="190" data="{{nodez}}">
       <template>
         <material-card autoraise path="{{model.path}}">
           <h2>{{model.name}}</h2>
 
-          <p>
-            <template if="{{model.isInvokable}}">
-              Invokable<br/>
-            </template>
+          <template if="{{model.isInvokable}}">
+            Invokable<template if="{{model.hasValue}}">, </template>
+          </template>
 
-            <template if="{{model.hasValue}}">
-              Type: {{model.type}}<br/>
-              Value: {{model.valueAsString(model.value)}}<br/>
-            </template>
-          </p>
+          <template if="{{model.hasValue}}">
+            Type: {{model.type}}<template if="{{model.value != null}}">, Value: {{model.valueAsString(model.value)}}</template>
+          </template>
 
           <div horizontal end-justified layout>
             <template if="{{model.hasChildren}}">
