@@ -185,6 +185,7 @@ class DSNodesElement extends PolymerElement with Observable {
 
     var dialog = x.querySelector("#dialog") as PaperDialog;
     dialog.open();
+    dialog.notifyResize();
   }
 
   onClicked(Event event, var detail, var target) {
@@ -193,6 +194,7 @@ class DSNodesElement extends PolymerElement with Observable {
 
     var dialog = x.querySelector("#dialog") as PaperDialog;
     dialog.open();
+    dialog.notifyResize();
   }
 
   onInvokeClicked(Event event, var detail, var target) {
@@ -200,6 +202,7 @@ class DSNodesElement extends PolymerElement with Observable {
     var p = x.attributes["path"];
     var dialog = x.querySelector("#invoke-dialog") as PaperDialog;
     dialog.open();
+    dialog.notifyResize();
   }
 
   invokeAction(Event event, var detail, var target) async {
@@ -225,6 +228,7 @@ class DSNodesElement extends PolymerElement with Observable {
     var a = dialog.querySelector("#invoke-value-dialog");
     a.querySelector("#value").text = valueAsString(result);
     a.open();
+    a.notifyResize();
   }
 
   onWatchValueClicked(Event event, var detail, var target) {
@@ -233,6 +237,7 @@ class DSNodesElement extends PolymerElement with Observable {
 
     var dialog = x.querySelector("#watch-dialog") as PaperDialog;
     dialog.open();
+    dialog.notifyResize();
   }
 
   closeDialog(Event event, var detail, var target) {
