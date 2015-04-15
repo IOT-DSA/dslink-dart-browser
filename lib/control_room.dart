@@ -11,6 +11,8 @@ export "package:polymer/polymer.dart";
 export "package:dslink/requester.dart";
 export "package:dslink/common.dart";
 
+const String DEFAULT_BROKER = "http://titan.directcode.org:8025/conn";
+
 BrowserECDHLink link;
 Requester requester;
 
@@ -24,7 +26,7 @@ initControlRoom() async {
     window.localStorage["dsa_key"] = key.saveToString();
   }
 
-  link = new BrowserECDHLink("http://titan.directcode.org:8025/conn", "Control-Room-", key, isResponder: false);
+  link = new BrowserECDHLink(DEFAULT_BROKER, "Control-Room-", key, isResponder: false);
   link.connect();
   await link.onRequesterReady;
   requester = link.requester;

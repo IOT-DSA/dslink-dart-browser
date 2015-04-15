@@ -13,13 +13,7 @@
   <template>
     <style>
       :host {
-        width: 256px;
-        height: 256px;
         visibility: visible;
-      }
-
-      material-card {
-        width: 250px;
       }
 
       material-card::shadow .content {
@@ -48,6 +42,10 @@
       html /deep/ paper-dropdown-menu {
         box-sizing: border-box;
         width: 170px;
+      }
+
+      .title {
+        font-size: 50px;
       }
 
       html /deep/ core-menu {
@@ -87,7 +85,7 @@
     <core-list-dart id="node-list" vertical layout fit height="190" data="{{nodez}}">
       <template>
         <material-card autoraise path="{{model.path}}">
-          <h2>{{model.name}}</h2>
+          <span style="font-size: 1.5em;font-weight: bold;">{{model.name}}</span>
 
           <template if="{{model.isInvokable}}">
             Invokable<template if="{{model.hasValue}}">, </template>
