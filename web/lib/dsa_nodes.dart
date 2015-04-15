@@ -44,6 +44,9 @@ class DSNodesElement extends PolymerElement with Observable {
     });
 
     onPropertyChange(this, #path, () {
+      ignoreHashChange = true;
+      window.location.hash = "#${path}";
+      ignoreHashChange = false;
       _pathController.add(path);
       if (loaded) {
         loadNodes();
@@ -134,6 +137,12 @@ class DSNodesElement extends PolymerElement with Observable {
 
           if (full.getConfig(r"$invokable") != null) {
             m.isInvokable = true;
+          }
+
+          if (full.getConfig(r"$disconnected") != null) {
+            m.offline = true;
+          } else {
+            m.offline = false;
           }
 
           if (full.getConfig(r"$type") != null) {
@@ -288,6 +297,9 @@ class NodeModel extends Observable {
   @observable
   bool ready = false;
 
+  @observable
+  bool offline = false;
+
   List<ActionParameter> _params;
 
   List<ActionParameter> get params {
@@ -307,11 +319,17 @@ class NodeModel extends Observable {
   }
 
   valueAsString(value) {
+    String str;
     if (value is Map || value is List) {
-      return _jsonEncoder.convert(value);
+      str = _jsonEncoder.convert(value);
     } else {
-      return value == null ? "null" : value.toString();
+      str = value == null ? "null" : value.toString();
     }
+    
+    if (str.length > 400) {
+      str = str.substring(0, 400) + "...";
+    }
+    return str;
   }
 }
 

@@ -81,3 +81,4 @@ Function viewAction;
 Function refreshAction;
 
 List<Function> onReadyHandlers = [];
+bool ignoreHashChange = false;
