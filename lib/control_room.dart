@@ -16,6 +16,8 @@ const String DEFAULT_BROKER = "http://titan.directcode.org:8025/conn";
 BrowserECDHLink link;
 Requester requester;
 
+bool truncateValues = true;
+
 initControlRoom() async {
   PrivateKey key;
 
@@ -26,6 +28,10 @@ initControlRoom() async {
     window.localStorage["dsa_key"] = key.saveToString();
   }
 
+  if (window.localStorage.containsKey("setting.truncate-values")) {
+    truncateValues = window.localStorage["setting.truncate-values"] == "1";
+  }
+
   link = new BrowserECDHLink(DEFAULT_BROKER, "Control-Room-", key, isResponder: false);
   link.connect();
   await link.onRequesterReady;
@@ -34,11 +40,23 @@ initControlRoom() async {
   var arrow = querySelector("#arrow") as PaperIconButton;
   var refresh = querySelector("#refresh-btn") as PaperIconButton;
   var view = querySelector("#view-top-node-btn") as PaperIconButton;
+  var settings = querySelector("#settings-btn") as PaperIconButton;
+  var settingTruncateValues = querySelector("#setting-truncate-values");
+
+  if (truncateValues) {
+    settingTruncateValues.checked = true;
+  }
 
   arrow.onClick.listen((_) {
     if (goBack != null) {
       goBack();
     }
+  });
+
+  settingTruncateValues.on["core-change"].listen((e) {
+    var checked = settingTruncateValues.checked;
+    window.localStorage["setting.truncate-values"] = checked ? "1" : "0";
+    truncateValues = checked;
   });
 
   refresh.onClick.listen((_) {
@@ -50,6 +68,14 @@ initControlRoom() async {
   view.onClick.listen((_) {
     if (viewAction != null) {
       viewAction();
+    }
+  });
+
+  settings.onClick.listen((_) {
+    if (settingsAction != null) {
+      settingsAction();
+    } else {
+      openDefaultSettings();
     }
   });
 
@@ -76,9 +102,15 @@ void toggleSpinner([bool on]) {
   }
 }
 
+void openDefaultSettings() {
+  var dialog = querySelector("#settings-dialog");
+  dialog.open();
+}
+
 Function goBack;
 Function viewAction;
 Function refreshAction;
+Function settingsAction;
 
 List<Function> onReadyHandlers = [];
 bool ignoreHashChange = false;

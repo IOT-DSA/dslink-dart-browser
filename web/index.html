@@ -11,6 +11,10 @@
   <link rel="import" href="packages/core_elements/core_drawer_panel.html">
   <link rel="import" href="packages/core_elements/core_toolbar.html">
   <link rel="import" href="packages/paper_elements/paper_spinner.html">
+  <link rel="import" href="packages/paper_elements/paper_dialog.html">
+  <link rel="import" href="packages/paper_elements/paper_button.html">
+  <link rel="import" href="packages/paper_elements/paper_checkbox.html">
+  <link rel="import" href="packages/core_elements/core_label.html">
   <link rel="import" href="lib/dsa_nodes.html">
   <link rel="stylesheet" href="style.css">
 
@@ -45,6 +49,10 @@
     paper-spinner.red::shadow .circle {
       border-color: #db4437;
     }
+
+    paper-checkbox {
+      padding: 20px 20px 20px 0;
+    }
   </style>
 </head>
 
@@ -58,9 +66,21 @@
       <paper-spinner class="red" id="spinner"></paper-spinner>
       <paper-icon-button icon="refresh" title="refresh" id="refresh-btn"></paper-icon-button>
       <paper-icon-button icon="info" title="view node" id="view-top-node-btn"></paper-icon-button>
+      <paper-icon-button icon="settings" title="settings" id="settings-btn"></paper-icon-button>
     </div>
   </core-toolbar>
   <div class="content">
+    <paper-dialog heading="Settings" backdrop="true" autofocus id="settings-dialog">
+      <core-label center horizontal layout>
+        <paper-checkbox id="setting-truncate-values" for></paper-checkbox>
+        <div vertical layout>
+          <h4>&nbsp;Truncate Values</h4>
+        </div>
+      </core-label>
+      <div horizontal end-justified layout>
+        <paper-button dismissive id="close-settings-dialog">Close</paper-button>
+      </div>
+    </paper-dialog>
     <dsa-nodes style="height: 100%;" path="/conns"></dsa-nodes>
   </div>
 </core-header-panel>

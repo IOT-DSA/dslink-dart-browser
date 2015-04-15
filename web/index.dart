@@ -14,4 +14,9 @@ startup() async {
   e.pathStream.listen((path) {
     querySelector("#path").text = path;
   });
+
+  var csdbtn = querySelector("#close-settings-dialog");
+  csdbtn.onClick.listen((e) {
+    csdbtn.parent.parent.close();
+  });
 }
