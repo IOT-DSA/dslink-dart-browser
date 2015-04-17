@@ -85,7 +85,7 @@
           <h2>{{model.name}}</h2>
 
           <template if="{{model.offline}}">
-            Offline<template if="{{model.hasValue || model.isInvokable}}">, </template>
+            Offline for {{model.offlineTimeString}}<template if="{{model.hasValue || model.isInvokable}}">, </template>
           </template>
 
           <template if="{{model.isInvokable}}">

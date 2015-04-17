@@ -108,6 +108,12 @@ class DSNodesElement extends PolymerElement with Observable {
 
       var futures = [];
 
+      for (var c in _ttc) {
+        c.cancel();
+      }
+      
+      _ttc.clear();
+
       for (RemoteNode child in node.children.values) {
         futures.add(new Future(() async {
           var existing = nodez.where((it) => it.node.remotePath == child.remotePath);
@@ -144,6 +150,16 @@ class DSNodesElement extends PolymerElement with Observable {
 
           if (full.getConfig(r"$disconnected") != null) {
             m.offline = true;
+            m.offlineTime = DateTime.parse(full.getConfig(r"$disconnected"));
+            
+            var t = new Timer.periodic(new Duration(seconds: 1), (timer) {
+              var now = new DateTime.now();
+              var off = m.offlineTime;
+              var diff = now.difference(off);
+              m.offlineTimeString = getDurationString(diff);
+            });
+            
+            _ttc.add(t);
           } else {
             m.offline = false;
           }
@@ -173,6 +189,8 @@ class DSNodesElement extends PolymerElement with Observable {
     });
   }
 
+  List<Timer> _ttc = [];
+
   Future<RemoteNode> getDSNode(RemoteNode xnode, String path) async {
     RemoteNode n = await requester
       .list(path)
@@ -197,7 +215,7 @@ class DSNodesElement extends PolymerElement with Observable {
 
     var dialog = x.querySelector("#dialog") as PaperDialog;
     dialog.open();
-    dialog.querySelector("#node-meta-table").columns = ["Key", "Value"];
+    //dialog.querySelector("#node-meta-table").columns = ["Key", "Value"];
     dialog.notifyResize();
   }
 
@@ -262,6 +280,20 @@ class DSNodesElement extends PolymerElement with Observable {
   StreamController<String> _pathController = new StreamController<String>();
 }
 
+String getDurationString(Duration duration) {
+  if (duration.inMilliseconds < 1000) {
+    return "${duration.inMilliseconds} millisecond${duration.inMilliseconds == 1 ? '' : 's'}";
+  } else if (duration.inSeconds < 60) {
+    return "${duration.inSeconds} second${duration.inSeconds == 1 ? '' : 's'}";
+  } else if (duration.inMinutes < 60) {
+    return "${duration.inMinutes} minute${duration.inMinutes == 1 ? '' : 's'}";
+  } else if (duration.inHours < 24) {
+    return "${duration.inHours} hour${duration.inHours == 1 ? '' : 's'}";
+  } else {
+    return "${duration.inDays} day${duration.inDays == 1 ? '' : 's'}";
+  }
+}
+
 class ActionParameter {
   String name;
   Object defaultValue;
@@ -301,6 +333,12 @@ class NodeModel extends Observable {
   bool isInvokable = false;
   @observable
   bool ready = false;
+  
+  @observable
+  DateTime offlineTime;
+  
+  @observable
+  String offlineTimeString;
 
   @observable
   bool offline = false;
