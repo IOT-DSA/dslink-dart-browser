@@ -8,6 +8,7 @@
 <link rel="import" href="packages/paper_elements/paper_dropdown_menu.html">
 <link rel="import" href="packages/paper_elements/paper_item.html">
 <link rel="import" href="packages/paper_elements/paper_spinner.html">
+<link rel="import" href="paper_table.html">
 
 <polymer-element name="dsa-nodes" attributes="path">
   <template>
@@ -48,6 +49,11 @@
         font-size: 50px;
       }
 
+      paper-table paper-table-header {
+        background-color: #2a337e;
+        color: #fff;
+      }
+
       html /deep/ core-menu {
         box-sizing: border-box;
         width: 170px;
@@ -56,26 +62,17 @@
 
     <paper-dialog id="view-top-node" autofocus backdrop heading="{{path}}">
       <div style="width: 600px;">
-        <h4>Configurations</h4>
-
-        <p>
-          <template repeat="{{key in topNode.configs.keys}}">
-            {{key}}: {{topNode.configs[key]}}<br/>
-          </template>
-        </p>
-      </div>
-
-      <template if="{{topNode.attributes.isNotEmpty}}">
-        <div style="width: 600px;">
-          <h4>Attributes</h4>
-
-          <p>
-            <template repeat="{{key in model.attributes.keys}}">
-              {{key}}: {{topNode.attributes[key]}}<br/>
+        <paper-table id="topnode-meta-table" fit>
+          <paper-table-body class="hover">
+            <template repeat="{{key in topNode.meta.keys}}">
+              <paper-table-row>
+                <paper-table-cell>{{key}}</paper-table-cell>
+                <paper-table-cell>{{topNode.meta[key]}}</paper-table-cell>
+              </paper-table-row>
             </template>
-          </p>
-        </div>
-      </template>
+          </paper-table-body>
+        </paper-table>
+      </div>
 
       <div horizontal end-justified layout>
         <paper-button id="close-top-node-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>

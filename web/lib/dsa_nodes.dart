@@ -16,6 +16,7 @@ import "package:paper_elements/paper_input.dart";
 import "package:core_elements/core_menu.dart";
 import "package:core_elements/core_list_dart.dart";
 import "package:paper_elements/paper_item.dart";
+import "paper_table.dart";
 
 @CustomTag("dsa-nodes")
 class DSNodesElement extends PolymerElement with Observable {
@@ -52,6 +53,8 @@ class DSNodesElement extends PolymerElement with Observable {
         loadNodes();
       }
     });
+
+    $["topnode-meta-table"].columns = ["Key", "Value"];
   }
 
   Stream<RequesterListUpdate> _listUpdate;
@@ -194,6 +197,7 @@ class DSNodesElement extends PolymerElement with Observable {
 
     var dialog = x.querySelector("#dialog") as PaperDialog;
     dialog.open();
+    dialog.querySelector("#node-meta-table").columns = ["Key", "Value"];
     dialog.notifyResize();
   }
 
@@ -292,6 +296,7 @@ class NodeModel extends Observable {
   @observable dynamic value;
   Map<String, dynamic> get attributes => node.attributes;
   Map<String, dynamic> get configs => node.configs;
+  Map<String, dynamic> get meta => {}..addAll(attributes)..addAll(configs);
   @observable
   bool isInvokable = false;
   @observable
