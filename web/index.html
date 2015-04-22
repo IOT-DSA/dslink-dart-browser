@@ -38,6 +38,7 @@
       display: block;
       padding-top: 100px;
       height: 100%;
+      -webkit-flex: 1 1 0;
     }
 
     paper-spinner {
@@ -69,7 +70,7 @@
       <paper-icon-button icon="settings" title="settings" id="settings-btn"></paper-icon-button>
     </div>
   </core-toolbar>
-  <div class="content">
+  <div class="content" flex vertical layout>
     <paper-dialog heading="Settings" backdrop="true" autofocus id="settings-dialog">
       <core-label center horizontal layout>
         <paper-checkbox id="setting-truncate-values" for></paper-checkbox>
