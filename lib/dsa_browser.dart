@@ -12,7 +12,7 @@ export "package:polymer/polymer.dart";
 export "package:dslink/requester.dart";
 export "package:dslink/common.dart";
 
-const String DEFAULT_BROKER = "http://titan.directcode.org:8025/conn";
+const String DEFAULT_BROKER = "http://127.0.0.1:8080/conn";
 
 BrowserECDHLink link;
 Requester requester;
