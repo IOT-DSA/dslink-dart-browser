@@ -110,7 +110,7 @@ class DSNodesElement extends PolymerElement with Observable {
       for (var c in _ttc) {
         c.cancel();
       }
-      
+
       _ttc.clear();
 
       for (RemoteNode child in node.children.values) {
@@ -147,17 +147,17 @@ class DSNodesElement extends PolymerElement with Observable {
             m.isInvokable = true;
           }
 
-          if (full.getConfig(r"$disconnected") != null) {
+          if (full.getConfig(r"$disconnectedTs") != null) {
             m.offline = true;
-            m.offlineTime = DateTime.parse(full.getConfig(r"$disconnected"));
-            
+            m.offlineTime = DateTime.parse(full.getConfig(r"$disconnectedTs"));
+
             var t = new Timer.periodic(new Duration(seconds: 1), (timer) {
               var now = new DateTime.now();
               var off = m.offlineTime;
               var diff = now.difference(off);
               m.offlineTimeString = getDurationString(diff);
             });
-            
+
             _ttc.add(t);
           } else {
             m.offline = false;
@@ -332,10 +332,10 @@ class NodeModel extends Observable {
   bool isInvokable = false;
   @observable
   bool ready = false;
-  
+
   @observable
   DateTime offlineTime;
-  
+
   @observable
   String offlineTimeString;
 
