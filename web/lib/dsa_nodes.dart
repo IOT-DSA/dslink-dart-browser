@@ -16,7 +16,6 @@ import "package:paper_elements/paper_input.dart";
 import "package:core_elements/core_menu.dart";
 import "package:core_elements/core_list_dart.dart";
 import "package:paper_elements/paper_item.dart";
-import "paper_table.dart";
 
 @CustomTag("dsa-nodes")
 class DSNodesElement extends PolymerElement with Observable {
@@ -368,7 +367,7 @@ class NodeModel extends Observable {
     } else {
       str = value == null ? "null" : value.toString();
     }
-    
+
     if (str.length > 400) {
       str = str.substring(0, 400) + "...";
     }
