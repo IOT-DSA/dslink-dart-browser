@@ -1,4 +1,3 @@
-import "dart:async";
 import "dart:html";
 
 import "package:dslink/browser_client.dart";
@@ -6,6 +5,8 @@ import "package:dslink/requester.dart";
 import "package:dslink/src/crypto/pk.dart";
 
 import "package:paper_elements/paper_icon_button.dart";
+import "package:paper_elements/paper_dialog.dart";
+import "package:paper_elements/paper_spinner.dart";
 
 export "package:polymer/polymer.dart";
 export "package:dslink/requester.dart";
@@ -94,7 +95,7 @@ initControlRoom() async {
 }
 
 void toggleSpinner([bool on]) {
-  var spinner = querySelector("#spinner");
+  PaperSpinner spinner = querySelector("#spinner");
   if (on != null) {
     spinner.active = on;
   } else {
@@ -103,7 +104,7 @@ void toggleSpinner([bool on]) {
 }
 
 void openDefaultSettings() {
-  var dialog = querySelector("#settings-dialog");
+  PaperDialog dialog = querySelector("#settings-dialog");
   dialog.open();
 }
 
