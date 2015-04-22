@@ -1,5 +1,5 @@
-name: control_room
-description: DSA Control Room
+name: dsa_browser
+description: DSA Browser
 version: 1.0.0
 dependencies:
   polymer: ">=0.16.0+1 <0.17.0"

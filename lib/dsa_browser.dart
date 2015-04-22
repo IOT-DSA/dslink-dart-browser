@@ -19,7 +19,7 @@ Requester requester;
 
 bool truncateValues = true;
 
-initControlRoom() async {
+initBrowser() async {
   PrivateKey key;
 
   if (window.localStorage.containsKey("dsa_key")) {

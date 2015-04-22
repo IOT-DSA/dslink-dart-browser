@@ -3,7 +3,7 @@
 @HtmlImport("package:paper_elements/paper_button.html")
 @HtmlImport("package:paper_elements/paper_dialog.html")
 @HtmlImport("package:paper_elements/paper_input.html")
-library control_room.dsa_nodes;
+library dsa_browser.dsa_nodes;
 
 import "dart:async";
 import "dart:html";

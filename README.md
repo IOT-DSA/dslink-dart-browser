@@ -1,10 +1,9 @@
-# Control Room
+# DSA Browser
 
-Control Room is a DSA Node Manager made with Polymer.dart
+DSA Browser allows you to view and manager DSA nodes. Made with Polymer.dart
 
 ## Features
 
 - Node Browser
 - Action Invocation
 - Value Watching
-
