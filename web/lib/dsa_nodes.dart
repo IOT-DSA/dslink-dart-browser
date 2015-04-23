@@ -9,7 +9,7 @@ import "dart:async";
 import "dart:html";
 import "dart:convert";
 
-import "package:control_room/control_room.dart";
+import "package:dsa_browser/dsa_browser.dart";
 import "package:dslink/requester.dart";
 import "package:paper_elements/paper_dialog.dart";
 import "package:paper_elements/paper_input.dart";
@@ -192,11 +192,11 @@ class DSNodesElement extends PolymerElement with Observable {
 
   Future<RemoteNode> getDSNode(RemoteNode xnode, String path) async {
     RemoteNode n = await requester
-      .list(path)
-      .where((it) => it.streamStatus != StreamStatus.initialize)
-      .map((it) => it.node)
-      .first
-      .timeout(new Duration(milliseconds: 1500), onTimeout: () {
+    .list(path)
+    .where((it) => it.streamStatus != StreamStatus.initialize)
+    .map((it) => it.node)
+    .first
+    .timeout(new Duration(milliseconds: 1500), onTimeout: () {
       return xnode;
     });
     return n;
