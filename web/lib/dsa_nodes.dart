@@ -9,7 +9,7 @@ import "dart:async";
 import "dart:html";
 import "dart:convert";
 
-import "package:control_room/control_room.dart";
+import "package:dsa_browser/dsa_browser.dart";
 import "package:dslink/requester.dart";
 import "package:paper_elements/paper_dialog.dart";
 import "package:paper_elements/paper_input.dart";
