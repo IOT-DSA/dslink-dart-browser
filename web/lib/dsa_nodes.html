@@ -11,185 +11,211 @@
 <link rel="import" href="paper_table.html">
 
 <polymer-element name="dsa-nodes" attributes="path">
-  <template>
-    <style>
-      :host {
-        visibility: visible;
-      }
+    <template>
+        <style>
+            :host {
+                visibility: visible;
+            }
 
-      material-card::shadow .content {
-        background-color: #03A9F4;
-        color: #FFF;
-        padding: 10px;
-        border-radius: 2px;
-      }
+            material-card::shadow .content {
+                background-color: #03A9F4;
+                color: #FFF;
+                padding: 10px;
+                border-radius: 2px;
+            }
 
-      core-list {
-        display: block;
-        height: 100%;
-        margin: 0 auto;
-      }
+            core-list {
+                display: block;
+                height: 100%;
+                margin: 0 auto;
+            }
 
-      paper-button {
-        z-index: 2 !important;
-      }
+            paper-button {
+                z-index: 2 !important;
+            }
 
-      html /deep/ paper-item {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
+            html /deep/ paper-item {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
 
-      html /deep/ paper-dropdown-menu {
-        box-sizing: border-box;
-        width: 170px;
-      }
+            html /deep/ paper-dropdown-menu {
+                box-sizing: border-box;
+                width: 170px;
+            }
 
-      .title {
-        font-size: 50px;
-      }
+            .title {
+                font-size: 50px;
+            }
 
-      paper-table paper-table-header {
-        background-color: #2a337e;
-        color: #fff;
-      }
+            paper-table paper-table-header {
+                background-color: #2a337e;
+                color: #fff;
+            }
 
-      html /deep/ core-menu {
-        box-sizing: border-box;
-        width: 170px;
-      }
-    </style>
+            html /deep/ core-menu {
+                box-sizing: border-box;
+                width: 170px;
+            }
+        </style>
 
-    <paper-dialog id="view-top-node" autofocus backdrop heading="{{path}}">
-      <div style="width: 600px;">
-        <paper-table id="topnode-meta-table" fit>
-          <paper-table-body class="hover">
-            <template repeat="{{key in topNode.meta.keys}}">
-              <paper-table-row>
-                <paper-table-cell>{{key}}</paper-table-cell>
-                <paper-table-cell>{{topNode.meta[key]}}</paper-table-cell>
-              </paper-table-row>
-            </template>
-          </paper-table-body>
-        </paper-table>
-      </div>
-
-      <div horizontal end-justified layout>
-        <paper-button id="close-top-node-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
-      </div>
-    </paper-dialog>
-
-    <core-list-dart id="node-list" vertical layout fit height="190" data="{{nodez}}">
-      <template>
-        <material-card autoraise path="{{model.path}}">
-          <h2>{{model.name}}</h2>
-
-          <template if="{{model.offline}}">
-            Offline for {{model.offlineTimeString}}<template if="{{model.hasValue || model.isInvokable}}">, </template>
-          </template>
-
-          <template if="{{model.isInvokable}}">
-            Invokable<template if="{{model.hasValue}}">, </template>
-          </template>
-
-          <template if="{{model.hasValue}}">
-            Type: {{model.type}}<template if="{{model.value != null}}">, Value: {{model.valueAsString(model.value)}}</template>
-          </template>
-
-          <div horizontal end-justified layout>
-            <template if="{{model.hasChildren}}">
-              <paper-button class="node-open" id="node-button" on-click="{{onNodeClicked}}">View Children</paper-button>
-            </template>
-
-            <template if="{{model.hasValue}}">
-              <paper-button class="node-open" id="watch-value" on-click="{{onWatchValueClicked}}">Watch Value</paper-button>
-            </template>
-
-            <template if="{{model.isInvokable}}">
-              <paper-button class="node-invoke" id="invoke-btn" on-click="{{onInvokeClicked}}">Invoke</paper-button>
-            </template>
-
-            <paper-button class="node-view" id="node-view" on-click="{{onViewNodeClicked}}">View Node</paper-button>
-          </div>
-
-          <paper-dialog id="watch-dialog" backdrop="true" heading="{{model.path}}" autofocus>
-            <div horizontal center-justified layout>
-              <p style="font-size: 40px; font-weight: bold;">{{model.valueAsString(model.value)}}</p>
-            </div>
-
-            <div horizontal end-justified layout>
-              <paper-button id="close-watch-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
-            </div>
-          </paper-dialog>
-
-          <paper-dialog id="invoke-dialog" backdrop="true" data-path="{{model.path}}" heading="Invoke {{model.path}}" autofocus>
-            <template if="{{model.isInvokable}}">
-            <template repeat="{{param in model.params}}">
-              <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
-              <!--<template if="{{param.isString}}">
-                <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
-              </template>-->
-
-<!--              <template if="{{param.isBoolean}}">
-                <paper-dropdown-menu label="{{param.label}}">
-                  <paper-dropdown>
-                    <core-menu data-key="{{param.name}}" class="action-param">
-                      <paper-item>true</paper-item>
-                      <paper-item>false</paper-item>
-                    </core-menu>
-                  </paper-dropdown>
-                </paper-dropdown-menu>
-              </template>-->
-            </template>
-            </template>
-
-            <div horizontal end-justified layout>
-              <paper-button id="invoke-action" on-click="{{invokeAction}}">Invoke</paper-button>
-              <paper-button id="close-invoke-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
-            </div>
-
-            <paper-dialog id="invoke-value-dialog" backdrop="true" data-path="{{model.path}}" heading="Invoke Result">
-              <div horizontal center-justified layout>
-                <p id="value" style="font-size: 40px; font-weight: bold;"></p>
-              </div>
-
-              <div horizontal end-justified layout>
-                <paper-button id="close-invoke-value-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
-              </div>
-            </paper-dialog>
-          </paper-dialog>
-
-          <paper-dialog transition="paper-dialog-transition-center" backdrop="true" id="dialog" heading="{{model.path}}" autofocus>
+        <paper-dialog id="view-top-node" autofocus backdrop heading="{{path}}">
             <div style="width: 600px;">
-              <h4>Configurations</h4>
-
-              <p>
-                <template repeat="{{key in model.configs.keys}}">
-                  {{key}}: {{model.configs[key]}}<br/>
-                </template>
-              </p>
-            </div>
-
-            <template if="{{model.attributes.isNotEmpty}}">
-              <div style="width: 600px;">
-                <h4>Attributes</h4>
+                <h4>Configurations</h4>
 
                 <p>
-                  <template repeat="{{key in model.attributes.keys}}">
-                    {{key}}: {{model.attributes[key]}}<br/>
-                  </template>
+                    <template repeat="{{key in topNode.configs.keys}}">
+                        {{key}}: {{topNode.configs[key]}}<br/>
+                    </template>
                 </p>
-              </div>
+            </div>
+
+            <template if="{{topNode.attributes.isNotEmpty}}">
+                <div style="width: 600px;">
+                    <h4>Attributes</h4>
+
+                    <p>
+                        <template repeat="{{key in topNode.attributes.keys}}">
+                            {{key}}: {{topNode.attributes[key]}}<br/>
+                        </template>
+                    </p>
+                </div>
             </template>
 
             <div horizontal end-justified layout>
-              <paper-button id="close-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
+                <paper-button id="close-top-node-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
             </div>
-          </paper-dialog>
-        </material-card>
-      </template>
-    </core-list-dart>
-  </template>
+        </paper-dialog>
 
-  <script type="application/dart" src="dsa_nodes.dart"></script>
+        <core-list-dart id="node-list" vertical layout fit height="190" data="{{nodez}}">
+            <template>
+                <material-card autoraise path="{{model.path}}">
+                    <h2>{{model.displayName}}</h2>
+
+                    <template if="{{model.offline}}">
+                        Offline for {{model.offlineTimeString}}
+                        <template if="{{model.hasValue || model.isInvokable}}">,</template>
+                    </template>
+
+                    <template if="{{model.isInvokable}}">
+                        Invokable
+                        <template if="{{model.hasValue}}">,</template>
+                    </template>
+
+                    <template if="{{model.hasValue}}">
+                        Type: {{model.type}}
+                        <template if="{{model.value != null}}">, Value: {{model.valueAsString(model.value)}}</template>
+                    </template>
+
+                    <div horizontal end-justified layout>
+                        <template if="{{model.hasChildren}}">
+                            <paper-button class="node-open" id="node-button" on-click="{{onNodeClicked}}">View
+                                Children
+                            </paper-button>
+                        </template>
+
+                        <template if="{{model.hasValue}}">
+                            <paper-button class="node-open" id="watch-value" on-click="{{onWatchValueClicked}}">Watch
+                                Value
+                            </paper-button>
+                        </template>
+
+                        <template if="{{model.isInvokable}}">
+                            <paper-button class="node-invoke" id="invoke-btn" on-click="{{onInvokeClicked}}">Invoke
+                            </paper-button>
+                        </template>
+
+                        <paper-button class="node-view" id="node-view" on-click="{{onViewNodeClicked}}">View Node
+                        </paper-button>
+                    </div>
+
+                    <paper-dialog id="watch-dialog" backdrop="true" heading="{{model.path}}" autofocus>
+                        <div horizontal center-justified layout>
+                            <p style="font-size: 40px; font-weight: bold;">{{model.valueAsString(model.value)}}</p>
+                        </div>
+
+                        <div horizontal end-justified layout>
+                            <paper-button id="close-watch-dialog" on-click="{{closeDialog}}" dismissive>Close
+                            </paper-button>
+                        </div>
+                    </paper-dialog>
+
+                    <paper-dialog id="invoke-dialog" backdrop="true" data-path="{{model.path}}"
+                                  heading="Invoke {{model.path}}" autofocus>
+                        <template if="{{model.isInvokable}}">
+                            <template repeat="{{param in model.params}}">
+                                <paper-input class="action-param" data-key="{{param.name}}"
+                                             label="{{param.label}}"></paper-input>
+                                <!--<template if="{{param.isString}}">
+                                  <paper-input class="action-param" data-key="{{param.name}}" label="{{param.label}}"></paper-input>
+                                </template>-->
+
+                                <!--              <template if="{{param.isBoolean}}">
+                                                <paper-dropdown-menu label="{{param.label}}">
+                                                  <paper-dropdown>
+                                                    <core-menu data-key="{{param.name}}" class="action-param">
+                                                      <paper-item>true</paper-item>
+                                                      <paper-item>false</paper-item>
+                                                    </core-menu>
+                                                  </paper-dropdown>
+                                                </paper-dropdown-menu>
+                                              </template>-->
+                            </template>
+                        </template>
+
+                        <div horizontal end-justified layout>
+                            <paper-button id="invoke-action" on-click="{{invokeAction}}">Invoke</paper-button>
+                            <paper-button id="close-invoke-dialog" on-click="{{closeDialog}}" dismissive>Close
+                            </paper-button>
+                        </div>
+
+                        <paper-dialog id="invoke-value-dialog" backdrop="true" data-path="{{model.path}}"
+                                      heading="Invoke Result">
+                            <div horizontal center-justified layout>
+                                <p id="value" style="font-size: 40px; font-weight: bold;"></p>
+                            </div>
+
+                            <div horizontal end-justified layout>
+                                <paper-button id="close-invoke-value-dialog" on-click="{{closeDialog}}" dismissive>
+                                    Close
+                                </paper-button>
+                            </div>
+                        </paper-dialog>
+                    </paper-dialog>
+
+                    <paper-dialog transition="paper-dialog-transition-center" backdrop="true" id="dialog"
+                                  heading="{{model.path}}" autofocus>
+                        <div style="width: 600px;">
+                            <h4>Configurations</h4>
+
+                            <p>
+                                <template repeat="{{key in model.configs.keys}}">
+                                    {{key}}: {{model.configs[key]}}<br/>
+                                </template>
+                            </p>
+                        </div>
+
+                        <template if="{{model.attributes.isNotEmpty}}">
+                            <div style="width: 600px;">
+                                <h4>Attributes</h4>
+
+                                <p>
+                                    <template repeat="{{key in model.attributes.keys}}">
+                                        {{key}}: {{model.attributes[key]}}<br/>
+                                    </template>
+                                </p>
+                            </div>
+                        </template>
+
+                        <div horizontal end-justified layout>
+                            <paper-button id="close-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
+                        </div>
+                    </paper-dialog>
+                </material-card>
+            </template>
+        </core-list-dart>
+    </template>
+
+    <script type="application/dart" src="dsa_nodes.dart"></script>
 </polymer-element>

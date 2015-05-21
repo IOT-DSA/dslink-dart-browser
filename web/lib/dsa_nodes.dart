@@ -318,6 +318,7 @@ class NodeModel extends Observable {
   bool get hasIcon => node.attributes.containsKey("icon");
   String get icon => node.getAttribute("icon");
   String get name => node.name;
+  String get displayName => node.configs.containsKey(r"$name") ? node.getConfig(r"$name") : node.name;
   String get path => node.remotePath;
   @observable
   bool hasValue = false;
