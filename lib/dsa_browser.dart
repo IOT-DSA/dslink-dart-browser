@@ -1,8 +1,8 @@
+library dsa_browser;
+
 import "dart:html";
 
-import "package:dslink/browser_client.dart";
-import "package:dslink/requester.dart";
-import "package:dslink/src/crypto/pk.dart";
+import "package:dslink/browser.dart";
 
 import "package:paper_elements/paper_icon_button.dart";
 import "package:paper_elements/paper_dialog.dart";
@@ -12,7 +12,7 @@ export "package:polymer/polymer.dart";
 export "package:dslink/requester.dart";
 export "package:dslink/common.dart";
 
-const String DEFAULT_BROKER = "http://127.0.0.1:8080/conn";
+String DEFAULT_BROKER;
 
 BrowserECDHLink link;
 Requester requester;
@@ -20,6 +20,8 @@ Requester requester;
 bool truncateValues = true;
 
 initBrowser() async {
+  DEFAULT_BROKER = await BrowserUtils.fetchBrokerUrlFromPath("broker_url", "http://127.0.0.1:8080/conn");
+
   PrivateKey key;
 
   if (window.localStorage.containsKey("dsa_key")) {
@@ -33,7 +35,7 @@ initBrowser() async {
     truncateValues = window.localStorage["setting.truncate-values"] == "1";
   }
 
-  link = new BrowserECDHLink(DEFAULT_BROKER, "Control-Room-", key, isResponder: false);
+  link = new BrowserECDHLink(DEFAULT_BROKER, "Node-Browser-", key, isResponder: false);
   link.connect();
   await link.onRequesterReady;
   requester = link.requester;

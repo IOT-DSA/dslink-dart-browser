@@ -143,6 +143,11 @@
 
                     <paper-dialog id="invoke-dialog" backdrop="true" data-path="{{model.path}}"
                                   heading="Invoke {{model.path}}" autofocus>
+                        <template if="{{model.isWritable}}">
+                            <paper-input class="action-param" data-key="value"
+                                         label="value"></paper-input>
+                        </template>
+
                         <template if="{{model.isInvokable}}">
                             <template repeat="{{param in model.params}}">
                                 <paper-input class="action-param" data-key="{{param.name}}"
@@ -165,9 +170,16 @@
                         </template>
 
                         <div horizontal end-justified layout>
-                            <paper-button id="invoke-action" on-click="{{invokeAction}}">Invoke</paper-button>
-                            <paper-button id="close-invoke-dialog" on-click="{{closeDialog}}" dismissive>Close
+                            <paper-button id="invoke-action" on-click="{{invokeAction}}">
+                                <template if="{{model.isInvokable}}">
+                                    Invoke
+                                </template>
+
+                                <template if="{{model.isWritable}}">
+                                    Set
+                                </template>
                             </paper-button>
+                            <paper-button id="close-invoke-dialog" on-click="{{closeDialog}}" dismissive>Close</paper-button>
                         </div>
 
                         <paper-dialog id="invoke-value-dialog" backdrop="true" data-path="{{model.path}}"

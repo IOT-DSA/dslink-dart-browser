@@ -249,13 +249,26 @@ class DSNodesElement extends PolymerElement with Observable {
       }
     }
 
+    var node = nodez.firstWhere((it) => it.path == dialog.attributes["data-path"]);
+
+    if (node.isWritable) {
+      await requester.set(node.path, map["value"]);
+      return;
+    }
+
     var stream = requester.invoke(dialog.attributes["data-path"], map);
     var update = await stream.first;
     var result = update.updates.first;
+
     if (result is Map && result.keys.length == 1) {
       result = result[result.keys.first];
     }
-    var a = dialog.querySelector("#invoke-value-dialog");
+
+    if ((result is Map && result.isEmpty) || (result is List && result.isEmpty)) {
+      return;
+    }
+
+    var a = dialog.querySelector("#invoke-value-dialog") as PaperDialog;
     a.querySelector("#value").text = valueAsString(result);
     a.open();
     a.notifyResize();
@@ -334,6 +347,8 @@ class NodeModel extends Observable {
   @observable
   bool ready = false;
 
+  bool get isWritable => node.configs.containsKey(r"$writable");
+
   @observable
   DateTime offlineTime;
 
@@ -350,12 +365,19 @@ class NodeModel extends Observable {
 
     _params = [];
 
-    if (node.getConfig(r"$params") == null) {
+    if (node.getConfig(r"$params") == null && !isWritable) {
       return _params;
     }
 
-    for (var o in node.getConfig(r"$params")) {
-      _params.add(new ActionParameter(o));
+    if (isWritable) {
+      _params.add(new ActionParameter({
+        "name": "value",
+        "type": node.getConfig(r"$type")
+      }));
+    } else {
+      for (var o in node.getConfig(r"$params")) {
+        _params.add(new ActionParameter(o));
+      }
     }
 
     return _params;
